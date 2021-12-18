@@ -14,7 +14,7 @@ def make_combination(species, dataframe):
                 after = dataframe[dataframe['version']==version].iloc[j].reset_index(drop=True)
                 before = dataframe[dataframe['version']==version].iloc[i].reset_index(drop=True)
 
-                if int(after[1]) > int(befor[1]):
+                if int(after[1]) > int(before[1]):
                     before_file_path.append(before[0])
                     after_file_path.append(after[0])
 
@@ -87,7 +87,7 @@ def make_train_df(root_path):
 def make_test_df(test_path):
     test_set = pd.read_csv(test_path+'/test_data.csv')
     test_set['l_root'] = test_set['before_file_path'].map(lambda x:test_path+'/'+x.split('_')[1]+'/'+x.split('_')[2])
-    test_set['l_root'] = test_set['after_file_path'].map(lambda x:test_path+'/'+x.split('_')[1]+'/'+x.split('_')[2])
+    test_set['r_root'] = test_set['after_file_path'].map(lambda x:test_path+'/'+x.split('_')[1]+'/'+x.split('_')[2])
 
     test_df = pd.DataFrame()
     test_df['before_file_path'] = test_set['l_root'] + '/' + test_set['before_file_path'] + '.png'

@@ -8,7 +8,7 @@ import pandas as pd
 import cv2
 import torch
 from torch.utils.data import Dataset, DataLoader
-from augmentations import train_global_transform, train_private_transform, test_global_transform
+from .augmentations import train_global_transform, train_private_transform, test_global_transform
 
 class GrowthDataset(Dataset):
     def __init__(self, df, train_mode, private_transforms, global_transforms):

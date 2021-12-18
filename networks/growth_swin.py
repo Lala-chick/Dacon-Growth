@@ -1,6 +1,7 @@
 from torch import nn
-from cross_attn import CrossAttentionBlock
+from .cross_attn import CrossAttentionBlock
 import timm
+import torch
 
 class SwinCA(nn.Module):
     def __init__(self):

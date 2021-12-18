@@ -11,7 +11,7 @@ import math
 import gc
 
 from data import *
-from networks import *
+import networks
 from utils import seed_everything, resize_module, str2bool
 from schedulers import CustomCosineAnnealingWarmUpRestarts
 
@@ -20,7 +20,7 @@ def train_model(model, optimizer, train_loader, valid_loader, scheduler, device,
     criterion = nn.MSELoss().to(device)
     best_rmse = 100
 
-    for epoch in range(1, args.epoch):
+    for epoch in range(1, args.epoch+1):
         model.train()
         train_metric = []
         valid_metric = []
@@ -62,7 +62,7 @@ def train_model(model, optimizer, train_loader, valid_loader, scheduler, device,
         if best_rmse > valid_rmse:
             best_rmse = valid_rmse
             torch.save(model.state_dict(), f"{args.save_path}/{args.model}_{fold}.pth")
-
+            print("Model is Saved!")
 
 def main(args):
     seed_everything(args.seed)
@@ -82,7 +82,7 @@ def main(args):
         train_loader = prepare_dataloader(train_df, 'train', args)
         valid_loader = prepare_dataloader(valid_df, 'valid', args)
         train_length = args.epoch*len(train_loader)
-        model = getattr(netwokrs, args.model)(pretrained=args.pretrained)
+        model = getattr(networks, args.model)(pretrained=args.pretrained)
         optimizer = getattr(torch.optim, args.optimizer)(params=model.parameters(), lr=0, weight_decay=args.weight_decay)
         scheduler = CustomCosineAnnealingWarmUpRestarts(optimizer, T_0=train_length, T_mult=1, eta_max=args.lr, T_up=train_length//10)
 
@@ -100,6 +100,10 @@ if __name__ == '__main__':
         "--seed",
         default=41,
         type=int
+    )
+    parser.add_argument(
+        "--train_path",
+        default="/content/open/train_dataset"
     )
     parser.add_argument(
         "--save_path",
@@ -127,7 +131,7 @@ if __name__ == '__main__':
         type=str
     )
     parser.add_argument(
-        "--prtrained",
+        "--pretrained",
         default=True,
         type=str2bool
     )
@@ -161,3 +165,6 @@ if __name__ == '__main__':
         default=1,
         type=int
     )
+
+    args = parser.parse_args()
+    main(args)

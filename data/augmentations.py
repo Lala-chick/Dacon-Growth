@@ -1,5 +1,6 @@
 import albumentations as A
-from albumentations.pytorch.transforms import ToTensorV2
+from albumentations.pytorch import ToTensorV2
+import cv2
 
 train_private_transform = A.Compose([
                             A.RandomBrightness(p=0.3),
